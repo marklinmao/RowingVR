@@ -9,10 +9,10 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
 
-    //public GameObject canvasInit;
-    //public GameObject canvasPlaying;
-    //public GameObject canvasFailure;
-    //public GameObject canvasSuccess;
+    public GameObject canvasInit;
+    public GameObject canvasPlaying;
+    public GameObject canvasFailure;
+    public GameObject canvasSuccess;
     public const String sceneName = "Main";
 
     public GameObject player;
@@ -25,7 +25,7 @@ public class GameManager : MonoBehaviour
     private PlayerController playerController;
     private float lastStateChange = 0.0f;
     private float maxLastingTimeAfterFailure = 5.0f;
-    private float successDistance = 5.0f;
+    private float successDistance = 20.0f;
     private float timestampGameStart = 0.0f;
     private float longpressTimeForReset = 3.5f;
     private float timestampOfAppBtnDown = 0.0f;
@@ -45,7 +45,7 @@ public class GameManager : MonoBehaviour
     {
 
         //Reset the scene
-        if (isAppBtnLongPressed(longpressTimeForReset))
+        if (IsAppBtnLongPressed(longpressTimeForReset))
         {
             SwitchToInitState();
         }
@@ -54,34 +54,32 @@ public class GameManager : MonoBehaviour
         switch (currentState)
         {
             case GameState.InitState:
-                enableSounds(false);
-                //canvasInit.SetActive(true);
-                //canvasPlaying.SetActive(false);
-                //canvasFailure.SetActive(false);
-                //canvasSuccess.SetActive(false);
+                EnableBackgroundMusic(false);
+                canvasInit.SetActive(true);
+                canvasPlaying.SetActive(false);
+                canvasFailure.SetActive(false);
+                canvasSuccess.SetActive(false);
                 break;
 
             case GameState.PlayingState:
-                enableSounds(true);
-                //canvasInit.SetActive(false);
-                //canvasPlaying.SetActive(true);
-                //canvasFailure.SetActive(false);
-                //canvasSuccess.SetActive(false);
+                EnableBackgroundMusic(true);
+                canvasInit.SetActive(false);
+                canvasPlaying.SetActive(true);
+                canvasFailure.SetActive(false);
+                canvasSuccess.SetActive(false);
 
-                //if reaching the destination, switch to success state
-                //SwitchToSuccessState();
-
-                //if hitting the land, switch to failure state
-                //SwitchToFailureState();
-
+                if (playerController.GetDistance() < successDistance)
+                {
+                    SwitchToSuccessState();
+                }
                 break;
 
             case GameState.FailureState:
-                enableSounds(false);
-                //canvasInit.SetActive(false);
-                //canvasPlaying.SetActive(false);
-                //canvasFailure.SetActive(true);
-                //canvasSuccess.SetActive(false);
+                EnableBackgroundMusic(false);
+                canvasInit.SetActive(false);
+                canvasPlaying.SetActive(false);
+                canvasFailure.SetActive(true);
+                canvasSuccess.SetActive(false);
                 if (GetStateElapsed() >= maxLastingTimeAfterFailure)
                 {
                     SwitchToInitState();
@@ -89,11 +87,11 @@ public class GameManager : MonoBehaviour
                 break;
 
             case GameState.SuccessState:
-                enableSounds(false);
-                //canvasInit.SetActive(false);
-                //canvasPlaying.SetActive(false);
-                //canvasFailure.SetActive(false);
-                //canvasSuccess.SetActive(true);
+                EnableBackgroundMusic(false);
+                canvasInit.SetActive(false);
+                canvasPlaying.SetActive(false);
+                canvasFailure.SetActive(false);
+                canvasSuccess.SetActive(true);
 
                 //calculate the time spent
                 scoreTimeCost = Time.time - timestampGameStart;
@@ -110,12 +108,12 @@ public class GameManager : MonoBehaviour
         // Debug.Log ("Current state: " + currentState);
     }
 
-    private void enableSounds(bool enabled)
+    private void EnableBackgroundMusic(bool enabled)
     {
         //TODO all sounds to be enabled
     }
 
-    private bool isAppBtnLongPressed(float lastingInSeconds)
+    private bool IsAppBtnLongPressed(float lastingInSeconds)
     {
         if (GvrControllerInput.AppButtonDown)
         {
