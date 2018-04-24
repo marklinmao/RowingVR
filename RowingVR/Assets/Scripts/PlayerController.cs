@@ -18,6 +18,11 @@ public class PlayerController : MonoBehaviour
     public GameObject accelYText;
     public GameObject accelZText;
 
+    public GameObject rowingDirX;
+    public GameObject rowingDirY;
+    public GameObject rowingDirZ;
+    public GameObject rowingForce;
+
     private GameManager gameManager;
     private Rigidbody rb;
 
@@ -123,6 +128,27 @@ public class PlayerController : MonoBehaviour
             }
             timeElapsed = 0f;
         }
+    }
+
+    void OnEnable()
+    {
+        EventManager.OnRowed += Move;
+    }
+
+    void OnDisable()
+    {
+        EventManager.OnRowed -= Move;    
+    }
+
+    private void Move(Vector3 direction, float force)
+    {
+        rowingDirX.GetComponent<Text>().text = direction.x.ToString("F2");
+        rowingDirY.GetComponent<Text>().text = direction.y.ToString("F2");
+        rowingDirZ.GetComponent<Text>().text = direction.z.ToString("F2");
+        rowingForce.GetComponent<Text>().text = force.ToString("F2");
+
+        //TODO... moving the boat
+
     }
 
 }

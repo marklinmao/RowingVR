@@ -21,7 +21,6 @@ public class GameManager : MonoBehaviour
     public enum GameState { InitState, PlayingState, FailureState, SuccessState };
     public GameState currentState;
 
-
     private PlayerController playerController;
     private float lastStateChange = 0.0f;
     private float maxLastingTimeAfterFailure = 5.0f;
